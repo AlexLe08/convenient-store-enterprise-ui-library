@@ -1,0 +1,73 @@
+{
+  "name": "convenient-store-enterprise-ui-library",
+  "version": "0.1.0",
+  "description": "Enterprise UI component library with advanced search capabilities",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "lint": "eslint . --ext ts,tsx",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "format": "prettier --write .",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run build",
+    "prepare": "husky"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^8.56.0",
+    "@floating-ui/react": "^0.27.20",
+    "@storybook/addon-a11y": "^7.6.10",
+    "@storybook/addon-essentials": "^7.6.10",
+    "@storybook/addon-interactions": "^7.6.10",
+    "@storybook/react-vite": "^7.6.10",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^1.2.0",
+    "@vitest/ui": "^1.2.0",
+    "autoprefixer": "^10.5.5",
+    "downshift": "^9.4.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "fuse.js": "^7.5.0",
+    "husky": "^9.1.7",
+    "jsdom": "^23.2.0",
+    "lint-staged": "^17.5.0",
+    "postcss": "^8.5.28",
+    "prettier": "^3.2.4",
+    "storybook": "^7.6.10",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.0",
+    "vite-plugin-dts": "^3.7.0",
+    "vitest": "^1.2.0"
+  }
+}

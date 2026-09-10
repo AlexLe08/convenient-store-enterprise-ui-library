@@ -1,0 +1,20 @@
+# Build outputs
+dist/
+storybook-static/
+coverage/
+node_modules
+
+# Environment
+.env
+.env.local
+*.zip
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
