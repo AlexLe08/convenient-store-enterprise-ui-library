@@ -1,39 +1,45 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
 import dts from 'vite-plugin-dts'
+import { libInjectCss } from 'vite-plugin-lib-inject-css'
+import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
   plugins: [
     react(),
+    libInjectCss(),   // must come before dts
     dts({
       include: ['src'],
-      exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/**/*.stories.tsx']
+      exclude: [
+        'src/**/*.test.ts',
+        'src/**/*.test.tsx',
+        'src/**/*.stories.tsx',
+        'src/test-setup.ts'
+      ],
+      rollupTypes: true,
+      tsconfigPath: './tsconfig.build.json'
     })
   ],
-  build: {
-    lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'ConvenientStoreUI',
-      fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`
-    },
-    rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM'
-        }
-      }
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/test-setup.ts',
-    coverage: {
-      reporter: ['text', 'html'],
-      exclude: ['src/**/*.stories.tsx', 'src/**/*.test.tsx']
+  build: {
+    sourcemap: true,
+    minify: false,
+    lib: {
+      entry: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
+      name: 'ConvenientStoreUI',
+      formats: ['es', 'cjs'],
+      fileName: (format) => {
+        if (format === 'es') return 'index.js'
+        if (format === 'cjs') return 'index.cjs'
+        return `index.${format}.js`
+      }
+    },
+    rollupOptions: {
+      external: ['react', 'react-dom', 'react/jsx-runtime']
     }
   }
 })

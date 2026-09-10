@@ -17,14 +17,36 @@
   "files": [
     "dist"
   ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexLe08/convenient-store-enterprise-ui-library.git"
+  },
+  "author": "Alex Le",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "component-library",
+    "typescript",
+    "search",
+    "combobox",
+    "autocomplete",
+    "vite",
+    "storybook"
+  ],
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "lint": "eslint . --ext ts,tsx",
-    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write .",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -56,8 +78,12 @@
     "autoprefixer": "^10.5.5",
     "downshift": "^9.4.0",
     "eslint": "^8.56.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "eslint-plugin-storybook": "^0.8.0",
     "fuse.js": "^7.5.0",
     "husky": "^9.1.7",
     "jsdom": "^23.2.0",
@@ -68,6 +94,7 @@
     "typescript": "^5.3.3",
     "vite": "^5.1.0",
     "vite-plugin-dts": "^3.7.0",
+    "vite-plugin-lib-inject-css": "^2.2.2",
     "vitest": "^1.2.0"
   }
 }
