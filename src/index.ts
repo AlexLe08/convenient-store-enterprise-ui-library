@@ -1,12 +1,17 @@
 // Components
-export * from './components'
+
 
 // Hooks
 export { useDebounce } from './hooks/useDebounce'
-export { useRecentSearches } from './components/SearchInput/hooks/useRecentSearches'
-export type {
-  UseRecentSearchesOptions,
-  UseRecentSearchesResult
+export {
+  useSearchSuggestions,
+  type UseSearchSuggestionsOptions,
+  type SuggestionsState
+} from './components/SearchInput/hooks/useSearchSuggestions'
+export {
+  useRecentSearches,
+  type UseRecentSearchesOptions,
+  type UseRecentSearchesResult
 } from './components/SearchInput/hooks/useRecentSearches'
 
 // Types
