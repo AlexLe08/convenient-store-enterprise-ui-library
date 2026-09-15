@@ -80,3 +80,13 @@ export interface SearchInputProps {
   /** Describes the input's purpose. */
   'aria-describedby'?: string
 }
+
+/**
+ * A single row in the dropdown, discriminated by kind.
+ * Used internally by `SuggestionsList` and the parent `SearchInput`.
+ *
+ * NOTE: Section headers are NOT included here. They're rendered
+ * separately and never passed to Downshift, so keyboard navigation
+ * skips them.
+ */
+export type DropdownItemKind = 'recent' | 'suggestion'
