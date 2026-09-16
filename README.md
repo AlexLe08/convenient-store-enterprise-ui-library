@@ -1,3 +1,5 @@
+[![Chromatic](https://img.shields.io/badge/Storybook-live%20preview-ff4785?logo=storybook)](https://main--6aab131bbd9144d2d7017827.chromatic.com/)
+
 # Convenient Store Enterprise UI Library
 
 A production-grade React component library demonstrating enterprise search UX patterns — autosuggest, recent searches, fuzzy matching, and full keyboard accessibility — built with a modern toolchain and comprehensive test coverage.
@@ -70,6 +72,14 @@ src/
 ---
 
 ## Quick Start
+
+# Live Preview
+
+The component library is published to Chromatic. Every push to `main` deploys a fresh build:
+
+**→ [View the Storybook](https://main--6aab131bbd9144d2d7017827.chromatic.com)**
+
+No setup required. Click through the eight states, type in the search bar, arrow through the suggestions.
 
 ```bash
 npm install

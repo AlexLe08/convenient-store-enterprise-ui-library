@@ -54,7 +54,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "prepublishOnly": "npm run check && npm run build",
-    "prepare": "husky"
+    "prepare": "husky",
+    "chromatic": "chromatic --exit-zero-on-changes"
   },
   "peerDependencies": {
     "react": "^18.2.0",
@@ -77,6 +78,7 @@
     "@vitest/coverage-v8": "^1.2.0",
     "@vitest/ui": "^1.2.0",
     "autoprefixer": "^10.5.5",
+    "chromatic": "^18.9.1",
     "eslint": "^8.56.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
