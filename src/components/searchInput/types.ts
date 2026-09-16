@@ -1,6 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
-import type { SearchSuggestion, SearchSource } from '@/types/search'
-
+import type { SearchSuggestion, SearchSource, RecentSearch } from '@/types/search'
 /**
  * Props for the SearchInput component.
  *
@@ -90,3 +89,28 @@ export interface SearchInputProps {
  * skips them.
  */
 export type DropdownItemKind = 'recent' | 'suggestion'
+
+/**
+ * A flattened dropdown item, tagged with its kind.
+ * This is what Downshift sees as its `items` array. Reference equality
+ * matters — the same object must flow from `useCombobox({ items })`
+ * through `getItemProps` to `onSelectedItemChange`.
+ *
+ * The `data` field carries the original domain object so consumers can
+ * access metadata (imageUrl, category, etc.) on selection.
+ */
+export type FlatItem =
+  | { kind: 'recent'; id: string; label: string; data: RecentSearch }
+  | {
+      kind: 'suggestion'
+      id: string
+      label: string
+      data: SearchSuggestion
+    }
+
+/**
+ * The subset of Downshift's `getItemProps` signature that our
+ * presentational subcomponents use. They only need the index;
+ * SearchInput resolves it to the actual item.
+ */
+export type GetItemPropsFn = (args: { index: number }) => Record<string, unknown>

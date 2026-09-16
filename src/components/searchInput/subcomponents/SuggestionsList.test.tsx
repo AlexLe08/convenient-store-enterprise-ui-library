@@ -6,14 +6,12 @@ import type { SearchSuggestion, RecentSearch } from '@/types/search'
 
 // Stub getItemProps — tests don't exercise Downshift here
 const getItemProps: React.ComponentProps<typeof SuggestionsList>['getItemProps'] = ({
-  item,
   index
 }) => ({
   id: `item-${index}`,
   role: 'option',
   'aria-selected': false,
-  'data-testid': `item-${index}`,
-  'data-item-label': 'label' in item ? item.label : ''
+  'data-testid': `item-${index}`
 })
 
 const RECENTS: RecentSearch[] = [

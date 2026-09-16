@@ -12,10 +12,7 @@ import styles from '../SearchInput.module.css'
  * The props Downshift's `getItemProps` returns for a single item.
  * We type it loosely so the list doesn't need to import Downshift.
  */
-export type GetItemProps = (args: {
-  item: SearchSuggestion | RecentSearch
-  index: number
-}) => Record<string, unknown>
+export type GetItemProps = (args: { index: number }) => Record<string, unknown>
 
 export interface SuggestionsListProps {
   /** Recent searches (rendered first if present). */
@@ -136,7 +133,7 @@ export function SuggestionsList({
                 isHighlighted={index === highlightedRecentIndex}
                 onRemove={onRemoveRecent ? () => onRemoveRecent(item.id) : undefined}
                 removeLabel={`Remove "${item.label}" from recent searches`}
-                {...getItemProps({ item, index })}
+                {...getItemProps({ index })}
               />
             ))}
           </ul>
@@ -161,10 +158,7 @@ export function SuggestionsList({
               renderContent={
                 renderSuggestion ? () => renderSuggestion(item) : undefined
               }
-              {...getItemProps({
-                item,
-                index: recentSearches.length + index
-              })}
+              {...getItemProps({ index: recentSearches.length + index })}
             />
           ))}
         </ul>

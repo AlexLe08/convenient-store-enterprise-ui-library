@@ -1,5 +1,6 @@
 // Components
-
+export { SearchInput } from './components/SearchInput/SearchInput'
+export type { SearchInputProps, FlatItem, GetItemPropsFn } from './components/SearchInput/types'
 
 // Hooks
 export { useDebounce } from './hooks/useDebounce'
