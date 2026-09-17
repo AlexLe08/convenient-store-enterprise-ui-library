@@ -55,7 +55,8 @@
     "test:coverage": "vitest run --coverage",
     "prepublishOnly": "npm run check && npm run build",
     "prepare": "husky",
-    "chromatic": "chromatic --exit-zero-on-changes"
+    "chromatic": "chromatic --exit-zero-on-changes",
+    "size": "node scripts/size-report.mjs"
   },
   "peerDependencies": {
     "react": "^18.2.0",
