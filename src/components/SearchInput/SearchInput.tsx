@@ -2,7 +2,6 @@ import { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import { useCombobox } from 'downshift'
 import {
   autoUpdate,
-  flip,
   FloatingPortal,
   offset,
   shift,
@@ -138,24 +137,27 @@ export function SearchInput({
     // Our outside-click dismissal doesn't rely on Downshift's hook.
     // See: https://github.com/downshift-js/downshift/issues/1505
     const { refs, floatingStyles } = useFloating({
-    open: isOpen,
-    onOpenChange: (nextOpen) => {
-        if (!nextOpen) closeMenu()
-    },
-    placement: 'bottom-start',
-    whileElementsMounted: autoUpdate,
-    middleware: [
-        offset(4),
-        flip({ padding: 8 }),
-        shift({ padding: 8 }),
-        size({
-        apply({ rects, elements }) {
-            // Match dropdown width to the input wrapper
-            elements.floating.style.minWidth = `${rects.reference.width}px`
+        open: isOpen,
+        onOpenChange: (nextOpen) => {
+            if (!nextOpen) closeMenu()
         },
-        padding: 8
-        })
-    ]
+        placement: 'bottom-start',
+        whileElementsMounted: autoUpdate,
+        middleware: [
+            offset(4),
+            shift({ padding: 8 }),
+            size({
+                padding: 8,
+                apply({ availableHeight, rects, elements }) {
+                // Match dropdown width to the input wrapper
+                elements.floating.style.minWidth = `${rects.reference.width}px`
+                // Constrain height to fit available space, but never smaller than 8rem
+                // (so the dropdown stays usable when squeezed).
+                const maxHeight = Math.max(Math.min(availableHeight, 320), 128)
+                elements.floating.style.maxHeight = `${maxHeight}px`
+                }
+            })
+        ]
     })
 
     // ─── Outside-click dismissal ─────────────────────────────────────────────
