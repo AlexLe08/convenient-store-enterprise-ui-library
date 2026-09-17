@@ -1,10 +1,11 @@
+[![Check](https://github.com/AlexLe08/convenient-store-enterprise-ui-library/actions/workflows/check.yml/badge.svg)](https://github.com/AlexLe08/convenient-store-enterprise-ui-library/actions/workflows/check.yml)
 [![Chromatic](https://img.shields.io/badge/Storybook-live%20preview-ff4785?logo=storybook)](https://main--6aab131bbd9144d2d7017827.chromatic.com/)
 
 # Convenient Store Enterprise UI Library
 
 A production-grade React component library demonstrating enterprise search UX patterns — autosuggest, recent searches, fuzzy matching, and full keyboard accessibility — built with a modern toolchain and comprehensive test coverage.
 
-> **Note:** This is a portfolio project inspired by my experience building a component library at a large retain enterprise. It is not published to npm. The project reflects how I approach development, testing, and shipping with high standards for accessibility and developer experience.
+> **Note:** This is a portfolio project inspired by my experience building a component library at a large retail enterprise. It is not published to npm. The project reflects how I approach development, testing, and shipping with high standards for accessibility and developer experience.
 >
 > It is **not** a fork or mirror of my former employer's  code. Everything here is written from scratch, using modern packages and patterns that showcase both my past and present-day skills.
 
@@ -231,7 +232,7 @@ npm run test:coverage
 
 ---
 
-## Notable Problems Solved
+## Engineering Problems Worth Documenting
 
 Documented here because the *process* matters as much as the outcome:
 
@@ -242,6 +243,8 @@ Documented here because the *process* matters as much as the outcome:
 3. **Downshift's menu ref doesn't survive the portal boundary.** Merging refs with `useMergeRefs` caused Downshift's dev-mode check to fail and its click-outside hook to never register. Fixed by splitting the two concerns onto separate DOM elements and implementing outside-click dismissal directly.
 
 4. **ESLint `import/extensions` conflicts with TypeScript conventions.** The rule was designed for Node ESM where extensions are required. In TS, they're forbidden. Disabled the rule and relied on `tsc` for resolution errors.
+
+5. **Storybook's Vite builder inherited the library's `dts` plugin.** `vite-plugin-dts` runs `@microsoft/api-extractor` against `dist/index.d.ts`, which doesn't exist when Storybook builds to a temp directory. The build crashed on the first Chromatic run with `The "mainEntryPointFilePath" path does not exist`. Fixed by adding a `viteFinal` hook in `.storybook/main.ts` that filters out the plugin by name — the same Vite config now serves two consumers with different needs.
 
 ---
 
