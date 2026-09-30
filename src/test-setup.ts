@@ -1,4 +1,8 @@
 import '@testing-library/jest-dom'
+import { expect } from 'vitest'
+import * as axeMatchers from 'vitest-axe/matchers'
+
+expect.extend(axeMatchers)
 
 function createMemoryStorage(): Storage {
   let store = new Map<string, string>()
@@ -20,7 +24,7 @@ function createMemoryStorage(): Storage {
     },
     setItem(key: string, value: string) {
       store.set(key, String(value))
-    }
+    },
   }
 }
 
@@ -48,11 +52,11 @@ function patchStorage(name: 'localStorage' | 'sessionStorage'): void {
         Object.defineProperty(target, name, {
           value: storage,
           configurable: true,
-          writable: true
+          writable: true,
         })
       } catch {
         try {
-          (target as unknown as Record<string, unknown>)[name] = storage;
+          ;(target as unknown as Record<string, unknown>)[name] = storage
         } catch {
           // Both attempts failed — nothing more we can do; let the test
           // surface its own error if this storage is essential.

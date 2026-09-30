@@ -1,7 +1,12 @@
 .container {
   position: relative;
   width: 100%;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
 }
 
 .inputWrapper {
@@ -14,7 +19,9 @@
   border-radius: 6px;
   background: #fff;
   box-sizing: border-box;
-  transition: border-color 150ms ease, box-shadow 150ms ease;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
 }
 
 .inputWrapper:focus-within {
@@ -44,6 +51,45 @@
   color: #9ca3af;
 }
 
+.listBody {
+  position: relative;
+}
+
+.dropdownWrapper {
+  position: relative;
+  z-index: 50;
+}
+
+.recentActions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  /* Match .listBody's top padding so the header row aligns with the section header */
+  padding-top: 0.25rem;
+}
+
+.recentActionHeader,
+.recentActionRow {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.5rem;
+  pointer-events: auto;
+}
+
+.recentActionHeader {
+  /* Matches .sectionHeader height so remove buttons align with rows below. */
+  height: 2rem;
+}
+
+.recentActionRow[data-highlighted='true'] {
+  background: transparent;
+}
+
 .clearButton,
 .suggestionRemove {
   display: inline-flex;
@@ -58,6 +104,12 @@
   background: transparent;
   color: #6b7280;
   cursor: pointer;
+}
+
+.suggestionRemove {
+  pointer-events: auto;
+  height: 2.5em; /* match row height */
+  margin-left: auto;
 }
 
 .clearButton:hover,
@@ -124,17 +176,26 @@
   text-decoration: underline;
 }
 
+.suggestionRow {
+  display: flex;
+  align-items: center;
+}
+
+.suggestionRow[data-highlighted='true'] {
+  background: #f3f4f6;
+}
+
 .suggestionItem {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  box-sizing: border-box;
   cursor: pointer;
   user-select: none;
-}
-
-.suggestionItem[data-highlighted='true'] {
-  background: #f3f4f6;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .suggestionLabel {

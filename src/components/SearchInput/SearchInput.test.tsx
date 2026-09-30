@@ -7,18 +7,18 @@ import type { SearchSuggestion, RecentSearch } from '@/types/search'
 const SUGGESTIONS: SearchSuggestion[] = [
   { id: 's1', label: 'iPhone 15 Pro' },
   { id: 's2', label: 'iPhone 15' },
-  { id: 's3', label: 'iPad Air' }
+  { id: 's3', label: 'iPad Air' },
 ]
 
 const RECENTS: RecentSearch[] = [
-    { id: 'r1', label: 'iPhone', timestamp: 1000 },
-    { id: 'r2', label: 'Samsung', timestamp: 500 }
+  { id: 'r1', label: 'iPhone', timestamp: 1000 },
+  { id: 'r2', label: 'Samsung', timestamp: 500 },
 ]
 
 const STORAGE_KEY = 'cs-ui:recent-searches'
 
 function seedRecents(recents: RecentSearch[]) {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(recents))
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(recents))
 }
 
 describe('SearchInput — integration', () => {
@@ -148,9 +148,7 @@ describe('SearchInput — integration', () => {
     // Read the actual highlighted label — Fuse ranking decides order
     let expectedLabel = ''
     await waitFor(() => {
-      const highlighted = document.querySelector(
-        '[data-highlighted="true"]'
-      ) as HTMLElement | null
+      const highlighted = document.querySelector('[data-highlighted="true"]') as HTMLElement | null
       expectedLabel = highlighted?.textContent ?? ''
       expect(expectedLabel).not.toBe('')
     })
@@ -357,7 +355,7 @@ describe('SearchInput — integration', () => {
     await user.type(input, 'pixel')
 
     await waitFor(() => {
-      expect(screen.getByRole('listbox')).toBeInTheDocument()
+      expect(screen.getByText('No results found.')).toBeInTheDocument()
     })
 
     await user.keyboard('{Enter}')
@@ -370,34 +368,64 @@ describe('SearchInput — integration', () => {
       expect(parsed[0].label).toBe('pixel')
     })
   })
+
+  it('removes a recent search when its overlay button is clicked', async () => {
+    window.localStorage.setItem(
+      'cs-ui:recent-searches',
+      JSON.stringify([{ id: 'r1', label: 'iPhone', timestamp: 1 }])
+    )
+    const user = userEvent.setup()
+
+    render(
+      <SearchInput
+        suggestions={SUGGESTIONS}
+        debounceMs={0}
+        minQueryLength={1}
+        aria-label="Search products"
+      />
+    )
+
+    const input = screen.getByRole('combobox', { name: 'Search products' })
+    await user.click(input)
+
+    await waitFor(() => {
+      expect(screen.getByText('Recent Searches')).toBeInTheDocument()
+    })
+
+    await user.click(screen.getByRole('button', { name: /Remove "iPhone"/ }))
+
+    await waitFor(() => {
+      expect(screen.queryByText('Recent Searches')).not.toBeInTheDocument()
+    })
+  })
 })
 
 describe('SearchInput — Tab key behavior', () => {
-    beforeEach(() => {
-        window.localStorage.clear()
-    })
+  beforeEach(() => {
+    window.localStorage.clear()
+  })
 
-    it('commits the highlighted suggestion when Tab is pressed', async () => {
+  it('commits the highlighted suggestion when Tab is pressed', async () => {
     const user = userEvent.setup()
     const onSelect = vi.fn()
     const onSearch = vi.fn()
 
     render(
-        <SearchInput
+      <SearchInput
         suggestions={SUGGESTIONS}
         debounceMs={0}
         minQueryLength={1}
         aria-label="Search products"
         onSelect={onSelect}
         onSearch={onSearch}
-        />
+      />
     )
 
     const input = screen.getByRole('combobox', { name: 'Search products' })
     await user.type(input, 'iphone')
 
     await waitFor(() => {
-        expect(screen.getByText('Suggestions')).toBeInTheDocument()
+      expect(screen.getByText('Suggestions')).toBeInTheDocument()
     })
 
     await user.keyboard('{ArrowDown}')
@@ -405,12 +433,10 @@ describe('SearchInput — Tab key behavior', () => {
     // Let Fuse decide which item is first — read the actual highlight.
     let expectedLabel = ''
     await waitFor(() => {
-        const highlighted = document.querySelector(
-        '[data-highlighted="true"]'
-        ) as HTMLElement | null
-        expect(highlighted).not.toBeNull()
-        expectedLabel = highlighted?.textContent ?? ''
-        expect(expectedLabel).not.toBe('')
+      const highlighted = document.querySelector('[data-highlighted="true"]') as HTMLElement | null
+      expect(highlighted).not.toBeNull()
+      expectedLabel = highlighted?.textContent ?? ''
+      expect(expectedLabel).not.toBe('')
     })
 
     // Press Tab
@@ -421,9 +447,7 @@ describe('SearchInput — Tab key behavior', () => {
 
     // Dropdown closed
     await waitFor(() => {
-        expect(
-        document.querySelector('[data-highlighted="true"]')
-        ).not.toBeInTheDocument()
+      expect(document.querySelector('[data-highlighted="true"]')).not.toBeInTheDocument()
     })
 
     // Callbacks fired with the item that matched the highlight
@@ -431,7 +455,7 @@ describe('SearchInput — Tab key behavior', () => {
     const selected = onSelect.mock.calls[0][0]
     expect(selected.label).toBe(expectedLabel)
     expect(onSearch).toHaveBeenCalledWith(expectedLabel, 'suggestion')
-    })
+  })
 
   it('does not commit when Tab is pressed without a highlight', async () => {
     const user = userEvent.setup()
