@@ -7,7 +7,7 @@ A production-grade React component library demonstrating enterprise search UX pa
 
 > **Note:** This is a portfolio project inspired by my experience building a component library at a large retail enterprise. It is not published to npm. The project reflects how I approach development, testing, and shipping with high standards for accessibility and developer experience.
 >
-> It is **not** a fork or mirror of my former employer's  code. Everything here is written from scratch, using modern packages and patterns that showcase both my past and present-day skills.
+> It is **not** a fork or mirror of my former employer's code. Everything here is written from scratch, using modern packages and patterns that showcase both my past and present-day skills.
 
 ---
 
@@ -60,15 +60,15 @@ src/
 
 ## Tech Stack & Rationale
 
-| Choice | Why |
-|--------|-----|
-| **Vite (library mode)** | Fast builds, native ESM, correct tree-shaking. Next.js is the wrong tool — it produces app bundles, not library artifacts. |
-| **Downshift v9** | Battle-tested combobox primitive. Handles the ARIA state machine so we don't have to. |
-| **Floating UI** | Popover positioning with `flip`, `shift`, and `size` middleware. Handles viewport edge cases that naive `position: absolute` misses. |
-| **Fuse.js** | Client-side fuzzy matching. Replaces a backend search index for the static-suggestions use case. |
-| **CSS Modules** | Zero runtime cost. No CSS-in-JS overhead in consumer bundles. Scoped by default. |
-| **Vitest + Testing Library** | Fast, jsdom-based, familiar API. Paired with `@testing-library/user-event` for realistic interaction tests. |
-| **Storybook 7** | Component documentation, visual state coverage, and a deployable preview for reviewers. |
+| Choice                       | Why                                                                                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Vite (library mode)**      | Fast builds, native ESM, correct tree-shaking. Next.js is the wrong tool — it produces app bundles, not library artifacts.           |
+| **Downshift v9**             | Battle-tested combobox primitive. Handles the ARIA state machine so we don't have to.                                                |
+| **Floating UI**              | Popover positioning with `flip`, `shift`, and `size` middleware. Handles viewport edge cases that naive `position: absolute` misses. |
+| **Fuse.js**                  | Client-side fuzzy matching. Replaces a backend search index for the static-suggestions use case.                                     |
+| **CSS Modules**              | Zero runtime cost. No CSS-in-JS overhead in consumer bundles. Scoped by default.                                                     |
+| **Vitest + Testing Library** | Fast, jsdom-based, familiar API. Paired with `@testing-library/user-event` for realistic interaction tests.                          |
+| **Storybook 7**              | Component documentation, visual state coverage, and a deployable preview for reviewers.                                              |
 
 ---
 
@@ -154,7 +154,7 @@ A naïve implementation would use `{ data, isLoading, error }`. The union makes 
 
 ### 2. Race-condition safety in async fetching
 
-Rapid typing fires multiple requests. A naïve implementation lets the *last response to arrive* win — which is often the *oldest* query. We solve it two ways:
+Rapid typing fires multiple requests. A naïve implementation lets the _last response to arrive_ win — which is often the _oldest_ query. We solve it two ways:
 
 - **`AbortController`** — cancels the network request when a new one starts.
 - **Monotonic request IDs** — a response checks "am I still the latest?" before updating state.
@@ -163,7 +163,7 @@ The second is the correctness guarantee; the first is the optimization. Both are
 
 ### 3. Enter-with-no-highlight submits the typed query
 
-Downshift's default for "Enter with no highlighted item" is to close silently. For a *search bar*, that's wrong — users expect Enter to *search*. We intercept the keydown **before** Downshift so the behavior is deterministic and doesn't depend on `preventDefault` ordering between handlers.
+Downshift's default for "Enter with no highlighted item" is to close silently. For a _search bar_, that's wrong — users expect Enter to _search_. We intercept the keydown **before** Downshift so the behavior is deterministic and doesn't depend on `preventDefault` ordering between handlers.
 
 ### 4. Tab commits the highlight
 
@@ -183,26 +183,26 @@ Zero runtime cost. Consumers import one CSS file. No styled-components dependenc
 
 Every interaction is covered by the ARIA Authoring Practices combobox pattern:
 
-| Attribute | Element | Purpose |
-|-----------|---------|---------|
-| `role="combobox"` | Input | Declares the composite widget |
-| `aria-expanded` | Input | Reflects dropdown open/closed |
-| `aria-controls` | Input | Points to the listbox ID |
-| `aria-activedescendant` | Input | Points to the currently highlighted option |
-| `role="listbox"` | Dropdown | Declares the option container |
-| `role="option"` | Each item | Declares selectable rows |
-| `role="presentation"` | Section headers | Prevents headers from being announced as options |
-| `role="alert"` | Error state | Announces fetcher errors immediately |
+| Attribute               | Element         | Purpose                                          |
+| ----------------------- | --------------- | ------------------------------------------------ |
+| `role="combobox"`       | Input           | Declares the composite widget                    |
+| `aria-expanded`         | Input           | Reflects dropdown open/closed                    |
+| `aria-controls`         | Input           | Points to the listbox ID                         |
+| `aria-activedescendant` | Input           | Points to the currently highlighted option       |
+| `role="listbox"`        | Dropdown        | Declares the option container                    |
+| `role="option"`         | Each item       | Declares selectable rows                         |
+| `role="presentation"`   | Section headers | Prevents headers from being announced as options |
+| `role="alert"`          | Error state     | Announces fetcher errors immediately             |
 
 Keyboard support:
 
-| Key | Behavior |
-|-----|----------|
-| `↓` / `↑` | Move highlight through items, wrapping through recents → suggestions |
-| `Enter` | Select highlighted item, or submit typed query if nothing highlighted |
-| `Tab` | Commit highlight (if any) and move focus |
-| `Escape` | Close dropdown, preserve typed query |
-| `Home` / `End` | Jump to first/last item |
+| Key            | Behavior                                                              |
+| -------------- | --------------------------------------------------------------------- |
+| `↓` / `↑`      | Move highlight through items, wrapping through recents → suggestions  |
+| `Enter`        | Select highlighted item, or submit typed query if nothing highlighted |
+| `Tab`          | Commit highlight (if any) and move focus                              |
+| `Escape`       | Close dropdown, preserve typed query                                  |
+| `Home` / `End` | Jump to first/last item                                               |
 
 Tested via `@testing-library/user-event` — real keystrokes, not synthetic events.
 
@@ -212,12 +212,13 @@ Tested via `@testing-library/user-event` — real keystrokes, not synthetic even
 
 89 tests across four layers:
 
-| Layer | Tests | What it covers |
-|-------|-------|---------------|
-| **Hooks** | 26 | Debounce timing, localStorage hydration, race conditions, aborted requests |
-| **Utilities** | 13 | Text segmentation, case preservation, regex-special characters |
-| **Subcomponents** | 33 | Rendering, prop forwarding, callback isolation |
-| **Component integration** | 17 | Keyboard nav, focus management, click-outside, callbacks, disabled state |
+| Layer                     | Tests | What it covers                                                             |
+| ------------------------- | ----- | -------------------------------------------------------------------------- |
+| **Hooks**                 | 26    | Debounce timing, localStorage hydration, race conditions, aborted requests |
+| **Utilities**             | 13    | Text segmentation, case preservation, regex-special characters             |
+| **Subcomponents**         | 33    | Rendering, prop forwarding, callback isolation                             |
+| **Component integration** | 17    | Keyboard nav, focus management, click-outside, callbacks, disabled state   |
+| **Accessibility**         | 8     | axe-core audits across all component states                                |
 
 Notable tests:
 
@@ -234,7 +235,7 @@ npm run test:coverage
 
 ## Engineering Problems Worth Documenting
 
-Documented here because the *process* matters as much as the outcome:
+Documented here because the _process_ matters as much as the outcome:
 
 1. **Node 22's experimental `localStorage` shadows jsdom's.** Node 22.4+ installs a broken `localStorage` stub before jsdom initializes, causing `window.localStorage` to be `undefined` in tests. Fixed with a defensive in-memory `Storage` polyfill in `test-setup.ts`.
 
@@ -245,6 +246,8 @@ Documented here because the *process* matters as much as the outcome:
 4. **ESLint `import/extensions` conflicts with TypeScript conventions.** The rule was designed for Node ESM where extensions are required. In TS, they're forbidden. Disabled the rule and relied on `tsc` for resolution errors.
 
 5. **Storybook's Vite builder inherited the library's `dts` plugin.** `vite-plugin-dts` runs `@microsoft/api-extractor` against `dist/index.d.ts`, which doesn't exist when Storybook builds to a temp directory. The build crashed on the first Chromatic run with `The "mainEntryPointFilePath" path does not exist`. Fixed by adding a `viteFinal` hook in `.storybook/main.ts` that filters out the plugin by name — the same Vite config now serves two consumers with different needs.
+
+6. **Axe enforced two contradictory accessibility rules on the same structure.** The recent-search remove button sat inside an `role="option"` element, triggering `nested-interactive`. Moving it out of the option made the button a direct descendant of the listbox, triggering `aria-required-children`. The fix was to move the entire actions layer outside the listbox subtree as a positioned sibling — the listbox now contains only `group` and `option` roles, and the buttons live in an overlay that aligns visually with the rows.
 
 ---
 

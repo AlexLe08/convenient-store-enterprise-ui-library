@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Automated accessibility testing via `vitest-axe`, running axe-core against all 8 SearchInput states in CI
+- Type augmentation in `src/types/vitest-axe.d.ts` bridging vitest-axe's broken type declarations to Vitest 2.x
+
+### Fixed
+
+- `nested-interactive` and `aria-required-children` violations in recent-search rows — remove buttons moved outside the listbox subtree to satisfy the ARIA spec
+- Listbox role is now only applied when the dropdown contains actionable options, not in loading/error/empty states
+
 ## [0.1.0] - 2026-09-17
 
 ### Added
