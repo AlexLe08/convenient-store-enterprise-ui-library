@@ -45,7 +45,10 @@ function patchStorage(name: 'localStorage' | 'sessionStorage'): void {
     if (isWorking) return
 
     const storage = createMemoryStorage()
-
+    const assignStorage = (target: object): void => {
+      const record = target as Record<string, unknown>
+      record[name] = storage
+    }
     // Try each target independently — never let one failure abort the file.
     for (const target of [window, globalThis]) {
       try {
@@ -56,7 +59,7 @@ function patchStorage(name: 'localStorage' | 'sessionStorage'): void {
         })
       } catch {
         try {
-          ;(target as unknown as Record<string, unknown>)[name] = storage
+          assignStorage(target)
         } catch {
           // Both attempts failed — nothing more we can do; let the test
           // surface its own error if this storage is essential.
