@@ -34,7 +34,8 @@ src/
 │       ├── SearchInput.tsx              # Main component — Downshift + Floating UI
 │       ├── SearchInput.module.css       # Scoped styles
 │       ├── SearchInput.test.tsx         # Integration tests
-│       ├── SearchInput.stories.tsx      # Storybook stories (8 states)
+│       ├── SearchInput.a11y.test.tsx    # Axe automated accessibility tests
+│       ├── SearchInput.stories.tsx      # Storybook stories
 │       ├── types.ts                     # Public prop types
 │       ├── hooks/
 │       │   ├── useSearchSuggestions.ts  # Debounced fetch + fuzzy match
@@ -50,6 +51,8 @@ src/
 │   └── useDebounce.ts                   # Generic debounce
 ├── types/
 │   └── search.ts                        # Shared domain types
+│   └── vitest-axe.d.ts                  # TS Axe Matcher resolver
+
 └── utils/
     └── highlightMatch.ts                # Text segmentation for highlighting
 ```
