@@ -7,7 +7,7 @@ import {
   shift,
   size,
   useFloating,
-  useMergeRefs
+  useMergeRefs,
 } from '@floating-ui/react'
 import { useSearchSuggestions } from './hooks/useSearchSuggestions'
 import { useRecentSearches } from './hooks/useRecentSearches'
@@ -42,7 +42,7 @@ export function SearchInput({
   'aria-label': ariaLabel,
   id,
   'aria-labelledby': ariaLabelledBy,
-  'aria-describedby': ariaDescribedBy
+  'aria-describedby': ariaDescribedBy,
 }: SearchInputProps) {
   const [inputValue, setInputValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -54,18 +54,14 @@ export function SearchInput({
     fetchSuggestions,
     debounceMs,
     minQueryLength,
-    limit
+    limit,
   })
 
-  const {
-    recentSearches,
-    addRecentSearch,
-    removeRecentSearch,
-    clearRecentSearches
-  } = useRecentSearches({
-    storageKey: recentSearchesKey,
-    maxItems: maxRecentSearches
-  })
+  const { recentSearches, addRecentSearch, removeRecentSearch, clearRecentSearches } =
+    useRecentSearches({
+      storageKey: recentSearchesKey,
+      maxItems: maxRecentSearches,
+    })
 
   // ─── Flat items for Downshift ────────────────────────────────────────────
   // Order matches render order: recents first, then suggestions.
@@ -78,7 +74,7 @@ export function SearchInput({
           kind: 'recent',
           id: recent.id,
           label: recent.label,
-          data: recent
+          data: recent,
         })
       }
     }
@@ -88,7 +84,7 @@ export function SearchInput({
           kind: 'suggestion',
           id: suggestion.id,
           label: suggestion.label,
-          data: suggestion
+          data: suggestion,
         })
       }
     }
@@ -96,109 +92,101 @@ export function SearchInput({
   }, [recentSearches, suggestionsState, showRecentSearches])
 
   // ─── Downshift ───────────────────────────────────────────────────────────
-  const {
-    isOpen,
-    highlightedIndex,
-    getInputProps,
-    getItemProps,
-    getMenuProps,
-    closeMenu
-  } = useCombobox<FlatItem>({
-    id,
-    items: flatItems,
-    inputValue,
-    itemToString: (item) => item?.label ?? '',
-    onInputValueChange: ({ inputValue: next = '' }) => {
-      setInputValue(next)
-      onChange?.(next)
-    },
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (!selectedItem) return
-      const label = selectedItem.label.trim()
-      if (!label) return
+  const { isOpen, highlightedIndex, getInputProps, getItemProps, getMenuProps, closeMenu } =
+    useCombobox<FlatItem>({
+      id,
+      items: flatItems,
+      inputValue,
+      itemToString: (item) => item?.label ?? '',
+      onInputValueChange: ({ inputValue: next = '' }) => {
+        setInputValue(next)
+        onChange?.(next)
+      },
+      onSelectedItemChange: ({ selectedItem }) => {
+        if (!selectedItem) return
+        const label = selectedItem.label.trim()
+        if (!label) return
 
-      addRecentSearch(label)
+        addRecentSearch(label)
 
-      if (selectedItem.kind === 'recent') {
-        onSearch?.(label, 'recent')
-      } else {
-        onSelect?.(selectedItem.data)
-        onSearch?.(label, 'suggestion')
-      }
-
-      closeMenu()
-    }
-  })
-
-    // ─── Floating UI ─────────────────────────────────────────────────────────
-    // Downshift v9 fires a spurious dev-mode warning when the menu is
-    // rendered through a portal. The ref is applied correctly — the
-    // warning is a timing artifact of Downshift's internal effect check.
-    // Our outside-click dismissal doesn't rely on Downshift's hook.
-    // See: https://github.com/downshift-js/downshift/issues/1505
-    const { refs, floatingStyles } = useFloating({
-        open: isOpen,
-        onOpenChange: (nextOpen) => {
-            if (!nextOpen) closeMenu()
-        },
-        placement: 'bottom-start',
-        whileElementsMounted: autoUpdate,
-        middleware: [
-            offset(4),
-            shift({ padding: 8 }),
-            size({
-                padding: 8,
-                apply({ availableHeight, rects, elements }) {
-                // Match dropdown width to the input wrapper
-                elements.floating.style.minWidth = `${rects.reference.width}px`
-                // Constrain height to fit available space, but never smaller than 8rem
-                // (so the dropdown stays usable when squeezed).
-                const maxHeight = Math.max(Math.min(availableHeight, 320), 128)
-                elements.floating.style.maxHeight = `${maxHeight}px`
-                }
-            })
-        ]
-    })
-
-    // ─── Outside-click dismissal ─────────────────────────────────────────────
-    // Downshift v9's built-in click-outside hook does not reliably register
-    // when the menu is portaled. We handle it directly using Floating UI's
-    // ref objects, which point at the container and the dropdown wrapper.
-    useEffect(() => {
-        if (!isOpen) return
-
-        function handleMouseDown(event: MouseEvent) {
-            const target = event.target as Node
-
-            // Floating UI's ref obj, holds outer .container div that wraps input and clear button; clicking anything here is "inside"
-            const inContainer =
-            refs.reference.current instanceof Element &&
-            refs.reference.current.contains(target)
-
-            // other ref obj, holds dropdown wrapper inside portal. Clicking any option is "inside"
-            const inDropdown =
-            refs.floating.current instanceof Element &&
-            refs.floating.current.contains(target)
-
-            // any click outside these two objs =  "outside" so close it
-            if (!inContainer && !inDropdown) {
-            closeMenu()
-            }
+        if (selectedItem.kind === 'recent') {
+          onSearch?.(label, 'recent')
+        } else {
+          onSelect?.(selectedItem.data)
+          onSearch?.(label, 'suggestion')
         }
 
-        // mousedown fires before focus changes
-        // If we listened for click, the input would blur first, then the outside handler would run — creating a race where the menu flickers closed and the click lands on whatever's behind it.
-        document.addEventListener('mousedown', handleMouseDown)
-        return () => document.removeEventListener('mousedown', handleMouseDown)
-    }, [isOpen, closeMenu, refs])
+        closeMenu()
+      },
+    })
 
-    const menuProps = getMenuProps()
+  // ─── Floating UI ─────────────────────────────────────────────────────────
+  // Downshift v9 fires a spurious dev-mode warning when the menu is
+  // rendered through a portal. The ref is applied correctly — the
+  // warning is a timing artifact of Downshift's internal effect check.
+  // Our outside-click dismissal doesn't rely on Downshift's hook.
+  // See: https://github.com/downshift-js/downshift/issues/1505
+  const { refs, floatingStyles } = useFloating({
+    open: isOpen,
+    onOpenChange: (nextOpen) => {
+      if (!nextOpen) closeMenu()
+    },
+    placement: 'bottom-start',
+    whileElementsMounted: autoUpdate,
+    middleware: [
+      offset(4),
+      shift({ padding: 8 }),
+      size({
+        padding: 8,
+        apply({ availableHeight, rects, elements }) {
+          // Match dropdown width to the input wrapper
+          elements.floating.style.minWidth = `${rects.reference.width}px`
+          // Constrain height to fit available space, but never smaller than 8rem
+          // (so the dropdown stays usable when squeezed).
+          const maxHeight = Math.max(Math.min(availableHeight, 320), 128)
+          elements.floating.style.maxHeight = `${maxHeight}px`
+        },
+      }),
+    ],
+  })
 
-    const { ref: downshiftInputRef, onKeyDown: downshiftKeyDown, ...inputProps } = getInputProps()
-    const mergedInputRef = useMergeRefs([downshiftInputRef, inputRef])
+  // ─── Outside-click dismissal ─────────────────────────────────────────────
+  // Downshift v9's built-in click-outside hook does not reliably register
+  // when the menu is portaled. We handle it directly using Floating UI's
+  // ref objects, which point at the container and the dropdown wrapper.
+  useEffect(() => {
+    if (!isOpen) return
+
+    function handleMouseDown(event: MouseEvent) {
+      const target = event.target as Node
+
+      // Floating UI's ref obj, holds outer .container div that wraps input and clear button; clicking anything here is "inside"
+      const inContainer =
+        refs.reference.current instanceof Element && refs.reference.current.contains(target)
+
+      // other ref obj, holds dropdown wrapper inside portal. Clicking any option is "inside"
+      const inDropdown =
+        refs.floating.current instanceof Element && refs.floating.current.contains(target)
+
+      // any click outside these two objs =  "outside" so close it
+      if (!inContainer && !inDropdown) {
+        closeMenu()
+      }
+    }
+
+    // mousedown fires before focus changes
+    // If we listened for click, the input would blur first, then the outside handler would run — creating a race where the menu flickers closed and the click lands on whatever's behind it.
+    document.addEventListener('mousedown', handleMouseDown)
+    return () => document.removeEventListener('mousedown', handleMouseDown)
+  }, [isOpen, closeMenu, refs])
+
+  const menuProps = getMenuProps()
+
+  const { ref: downshiftInputRef, onKeyDown: downshiftKeyDown, ...inputProps } = getInputProps()
+  const mergedInputRef = useMergeRefs([downshiftInputRef, inputRef])
 
   // ─── Handlers ────────────────────────────────────────────────────────────
-    // Downshift's default for "Enter with no highlight" is to close the menu silently. That's a perfectly reasonable default for a generic combobox, but it's not what we want for a search bar — we want the typed query to be submitted. Intercepting before Downshift gives us deterministic behavior and avoids preventDefault ordering games.
+  // Downshift's default for "Enter with no highlight" is to close the menu silently. That's a perfectly reasonable default for a generic combobox, but it's not what we want for a search bar — we want the typed query to be submitted. Intercepting before Downshift gives us deterministic behavior and avoids preventDefault ordering games.
   // Enter with a highlight still goes to Downshift, which fires onSelectedItemChange for the suggestion. Arrow keys, Escape, Home/End all still go to Downshift unchanged.
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -213,12 +201,33 @@ export function SearchInput({
           return
         }
       }
+
+      // Delete/Backspace on a highlighted recent removes it.
+      // Needed because the remove button is tabIndex={-1} — keyboard
+      // users can't Tab to it, so Delete on the highlighted row is the
+      // keyboard equivalent.
+      if (
+        (event.key === 'Delete' || event.key === 'Backspace') &&
+        highlightedIndex >= 0 &&
+        highlightedIndex < recentSearches.length
+      ) {
+        event.preventDefault()
+        removeRecentSearch(recentSearches[highlightedIndex].id)
+        return
+      }
       downshiftKeyDown?.(event)
     },
-    [highlightedIndex, inputValue, addRecentSearch, onSearch, closeMenu, downshiftKeyDown]
+    [
+      highlightedIndex,
+      inputValue,
+      recentSearches,
+      addRecentSearch,
+      removeRecentSearch,
+      onSearch,
+      closeMenu,
+      downshiftKeyDown,
+    ]
   )
-
-
 
   const handleClear = useCallback(() => {
     setInputValue('')
@@ -228,25 +237,32 @@ export function SearchInput({
   }, [onChange, closeMenu])
 
   // ─── Derived render state ────────────────────────────────────────────────
-  const suggestionItems =
-    suggestionsState.status === 'success' ? suggestionsState.suggestions : []
+  const suggestionItems = suggestionsState.status === 'success' ? suggestionsState.suggestions : []
 
   const highlightedRecentIndex =
-    highlightedIndex >= 0 && highlightedIndex < recentSearches.length
-      ? highlightedIndex
-      : -1
+    highlightedIndex >= 0 && highlightedIndex < recentSearches.length ? highlightedIndex : -1
 
   const highlightedSuggestionIndex =
-    highlightedIndex >= recentSearches.length
-      ? highlightedIndex - recentSearches.length
-      : -1
+    highlightedIndex >= recentSearches.length ? highlightedIndex - recentSearches.length : -1
 
   const showClearButton = inputValue.length > 0 && !disabled
 
-const showDropdown = isOpen && (recentSearches.length > 0 ||
-    suggestionsState.status === 'loading' ||
-    suggestionsState.status === 'error' ||
-    suggestionsState.status === 'success')
+  const showDropdown =
+    isOpen &&
+    (recentSearches.length > 0 ||
+      suggestionsState.status === 'loading' ||
+      suggestionsState.status === 'error' ||
+      suggestionsState.status === 'success')
+
+  // The dropdown should only carry role="listbox" when it actually contains
+  // actionable options. Loading, error, and empty states are status messages,
+  // not listboxes — applying the listbox role to them triggers axe's
+  // aria-required-children rule because the content isn't option/group.
+  const hasActionableOptions =
+    suggestionsState.status !== 'loading' &&
+    suggestionsState.status !== 'error' &&
+    (recentSearches.length > 0 ||
+      (suggestionsState.status === 'success' && suggestionsState.suggestions.length > 0))
 
   const getItemPropsForList = useCallback(
     ({ index }: { index: number }) => {
@@ -264,69 +280,97 @@ const showDropdown = isOpen && (recentSearches.length > 0 ||
       className={[styles.container, className].filter(Boolean).join(' ')}
       style={style}
     >
-        <div className={styles.inputWrapper}>
-            {renderLeadingIcon !== null && (
-            <span className={styles.leadingIcon} aria-hidden="true">
-                {renderLeadingIcon ? renderLeadingIcon() : <DefaultSearchIcon />}
-            </span>
-            )}
+      <div className={styles.inputWrapper}>
+        {renderLeadingIcon !== null && (
+          <span className={styles.leadingIcon} aria-hidden="true">
+            {renderLeadingIcon ? renderLeadingIcon() : <DefaultSearchIcon />}
+          </span>
+        )}
 
-            <input
-            // getInputProps returns props and a ref, destructure here then use mergedInputRef instead
-            {...inputProps}
-            {...{
-                'aria-label': ariaLabel,
-                'aria-labelledby': ariaLabelledBy,
-                'aria-describedby': ariaDescribedBy
-            }}
-            ref={mergedInputRef}
-            className={styles.input}
-            placeholder={placeholder}
-            disabled={disabled}
-            autoFocus={autoFocus}
-            onKeyDown={handleKeyDown}
-            />
+        <input
+          // getInputProps returns props and a ref, destructure here then use mergedInputRef instead
+          {...inputProps}
+          {...{
+            'aria-label': ariaLabel,
+            'aria-labelledby': ariaLabelledBy,
+            'aria-describedby': ariaDescribedBy,
+          }}
+          ref={mergedInputRef}
+          className={styles.input}
+          placeholder={placeholder}
+          disabled={disabled}
+          autoFocus={autoFocus}
+          onKeyDown={handleKeyDown}
+        />
 
-            {showClearButton && (
-            <ClearButton onClick={handleClear} className={styles.clearButton} />
-            )}
-        </div>
+        {showClearButton && <ClearButton onClick={handleClear} className={styles.clearButton} />}
+      </div>
 
-        <FloatingPortal>
-            {showDropdown && (
-                // Downshift needs its ref on the element that plays the role="listbox" semantic role. Floating UI needs its ref on the element it positions. 
-                <div ref={refs.setFloating} style={floatingStyles}>
-                    <div
-                    {...menuProps}
-                    className={styles.dropdown}
-                    data-state="open"
-                    >
-                        <SuggestionsList
-                            recentSearches={recentSearches}
-                            suggestions={suggestionItems}
-                            query={inputValue}
-                            isLoading={suggestionsState.status === 'loading'}
-                            error={
-                            suggestionsState.status === 'error'
-                                ? suggestionsState.error
-                                : null
-                            }
-                            highlightedRecentIndex={highlightedRecentIndex}
-                            highlightedSuggestionIndex={highlightedSuggestionIndex}
-                            onRemoveRecent={removeRecentSearch}
-                            onClearRecents={clearRecentSearches}
-                            renderSuggestion={renderSuggestion}
-                            emptyMessage={emptyMessage}
-                            loadingMessage={loadingMessage}
-                            recentSearchesLabel={recentSearchesLabel}
-                            suggestionsLabel={suggestionsLabel}
-                            showRecentSearches={showRecentSearches}
-                            getItemProps={getItemPropsForList}
-                        />
-                    </div>
+      <FloatingPortal>
+        {showDropdown && (
+          <div ref={refs.setFloating} style={floatingStyles} className={styles.dropdownWrapper}>
+            <div
+              {...menuProps}
+              role={hasActionableOptions ? 'listbox' : undefined}
+              className={styles.dropdown}
+              data-state="open"
+            >
+              <SuggestionsList
+                recentSearches={recentSearches}
+                suggestions={suggestionItems}
+                query={inputValue}
+                isLoading={suggestionsState.status === 'loading'}
+                error={suggestionsState.status === 'error' ? suggestionsState.error : null}
+                highlightedRecentIndex={highlightedRecentIndex}
+                highlightedSuggestionIndex={highlightedSuggestionIndex}
+                renderSuggestion={renderSuggestion}
+                emptyMessage={emptyMessage}
+                loadingMessage={loadingMessage}
+                recentSearchesLabel={recentSearchesLabel}
+                suggestionsLabel={suggestionsLabel}
+                showRecentSearches={showRecentSearches}
+                getItemProps={getItemPropsForList}
+              />
+            </div>
+
+            {showRecentSearches && recentSearches.length > 0 && hasActionableOptions && (
+              <div className={styles.recentActions}>
+                <div className={styles.recentActionHeader}>
+                  <button
+                    type="button"
+                    className={styles.sectionHeaderAction}
+                    tabIndex={-1}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      clearRecentSearches()
+                    }}
+                  >
+                    Clear all
+                  </button>
                 </div>
+                {recentSearches.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={styles.recentActionRow}
+                    data-highlighted={index === highlightedRecentIndex ? 'true' : undefined}
+                  >
+                    <ClearButton
+                      label={`Remove "${item.label}" from recent searches`}
+                      tabIndex={-1}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        removeRecentSearch(item.id)
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
             )}
-        </FloatingPortal>
+          </div>
+        )}
+      </FloatingPortal>
     </div>
   )
 }
@@ -335,7 +379,13 @@ function DefaultSearchIcon() {
   return (
     <svg viewBox="0 0 16 16" width="16" height="16" focusable="false">
       <circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
-      <path d="M10.5 10.5L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+      <path
+        d="M10.5 10.5L14 14"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        fill="none"
+      />
     </svg>
   )
 }

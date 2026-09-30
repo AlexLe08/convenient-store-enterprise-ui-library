@@ -79,6 +79,7 @@
     "@vitest/coverage-v8": "^1.2.0",
     "@vitest/ui": "^1.2.0",
     "autoprefixer": "^10.5.5",
+    "axe-core": "^4.13.0",
     "chromatic": "^18.9.1",
     "eslint": "^8.56.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -97,7 +98,8 @@
     "vite": "^5.1.0",
     "vite-plugin-dts": "^3.7.0",
     "vite-plugin-lib-inject-css": "^2.2.2",
-    "vitest": "^1.2.0"
+    "vitest": "^1.2.0",
+    "vitest-axe": "^0.1.0"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.20",

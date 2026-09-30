@@ -1,8 +1,5 @@
 import type { ReactNode } from 'react'
-import type {
-  SearchSuggestion,
-  RecentSearch
-} from '@/types/search'
+import type { SearchSuggestion, RecentSearch } from '@/types/search'
 import { SectionHeader } from './SectionHeader'
 import { SuggestionItem } from './SuggestionItem'
 import { LoadingIndicator } from './LoadingIndicator'
@@ -29,10 +26,6 @@ export interface SuggestionsListProps {
   highlightedSuggestionIndex?: number
   /** Which recent-search index is keyboard-highlighted (offset from first recent). */
   highlightedRecentIndex?: number
-  /** Fired when a recent search's remove button is clicked. */
-  onRemoveRecent?: (id: string) => void
-  /** Fired when "Clear all" is clicked in the recents header. */
-  onClearRecents?: () => void
   /** Fired when "Clear all" is clicked in the recents header. */
   onClearSuggestions?: () => void
   /** Custom renderer for suggestion rows. */
@@ -67,8 +60,6 @@ export function SuggestionsList({
   error = null,
   highlightedSuggestionIndex = -1,
   highlightedRecentIndex = -1,
-  onRemoveRecent,
-  onClearRecents,
   onClearSuggestions,
   renderSuggestion,
   emptyMessage = 'No results found.',
@@ -77,7 +68,7 @@ export function SuggestionsList({
   suggestionsLabel = 'Suggestions',
   showRecentSearches = true,
   getItemProps,
-  className
+  className,
 }: SuggestionsListProps) {
   const hasRecents = showRecentSearches && recentSearches.length > 0
   const hasSuggestions = suggestions.length > 0
@@ -94,9 +85,7 @@ export function SuggestionsList({
     return (
       <div
         role="alert"
-        className={[styles.listState, styles.listError, className]
-          .filter(Boolean)
-          .join(' ')}
+        className={[styles.listState, styles.listError, className].filter(Boolean).join(' ')}
       >
         {error.message || 'Something went wrong.'}
       </div>
@@ -107,37 +96,26 @@ export function SuggestionsList({
     // Only show the empty message if there's a query to have failed on.
     if (!query.trim()) return null
     return (
-      <div className={[styles.listState, className].filter(Boolean).join(' ')}>
-        {emptyMessage}
-      </div>
+      <div className={[styles.listState, className].filter(Boolean).join(' ')}>{emptyMessage}</div>
     )
   }
 
   return (
     <div className={[styles.listBody, className].filter(Boolean).join(' ')}>
       {hasRecents && (
-        <>
-          <ul className={styles.listGroup} role="group" aria-label={recentSearchesLabel}>
-            <SectionHeader
-              actionLabel={onClearRecents ? 'Clear all' : undefined}
-              onAction={onClearRecents}
-            >
-              {recentSearchesLabel}
-            </SectionHeader>
-            {recentSearches.map((item, index) => (
-              <SuggestionItem
-                key={item.id}
-                kind="recent"
-                label={item.label}
-                query={query}
-                isHighlighted={index === highlightedRecentIndex}
-                onRemove={onRemoveRecent ? () => onRemoveRecent(item.id) : undefined}
-                removeLabel={`Remove "${item.label}" from recent searches`}
-                {...getItemProps({ index })}
-              />
-            ))}
-          </ul>
-        </>
+        <ul className={styles.listGroup} role="group" aria-label={recentSearchesLabel}>
+          <SectionHeader>{recentSearchesLabel}</SectionHeader>
+          {recentSearches.map((item, index) => (
+            <SuggestionItem
+              key={item.id}
+              kind="recent"
+              label={item.label}
+              query={query}
+              isHighlighted={index === highlightedRecentIndex}
+              {...getItemProps({ index })}
+            />
+          ))}
+        </ul>
       )}
 
       {hasSuggestions && (
@@ -155,9 +133,7 @@ export function SuggestionsList({
               label={item.label}
               query={query}
               isHighlighted={index === highlightedSuggestionIndex}
-              renderContent={
-                renderSuggestion ? () => renderSuggestion(item) : undefined
-              }
+              renderContent={renderSuggestion ? () => renderSuggestion(item) : undefined}
               {...getItemProps({ index: recentSearches.length + index })}
             />
           ))}
