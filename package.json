@@ -54,7 +54,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "prepublishOnly": "npm run check && npm run build",
-    "prepare": "husky",
+    "prepare": "husky && npm run build",
     "chromatic": "chromatic --exit-zero-on-changes",
     "size": "node scripts/size-report.mjs"
   },
