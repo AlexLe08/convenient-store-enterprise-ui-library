@@ -14,6 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `nested-interactive` and `aria-required-children` violations in recent-search rows — remove buttons moved outside the listbox subtree to satisfy the ARIA spec
 - Listbox role is now only applied when the dropdown contains actionable options, not in loading/error/empty states
 
+## [0.1.2] - 2026-10-03
+
+### Fixed
+
+- Stylesheet export now points at the emitted `dist/index.css`. The previous
+  `./style.css` export referenced a file Vite's library mode does not produce.
+  Discovered when the Header library consumed SearchInput via git-URL and its
+  build failed to resolve the CSS import.
+
 ## [0.1.0] - 2026-09-17
 
 ### Added
