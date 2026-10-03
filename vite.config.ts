@@ -7,23 +7,23 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   plugins: [
     react(),
-    libInjectCss(),   // must come before dts
+    libInjectCss(), // must come before dts
     dts({
       include: ['src'],
       exclude: [
         'src/**/*.test.ts',
         'src/**/*.test.tsx',
         'src/**/*.stories.tsx',
-        'src/test-setup.ts'
+        'src/test-setup.ts',
       ],
       rollupTypes: true,
-      tsconfigPath: './tsconfig.build.json'
-    })
+      tsconfigPath: './tsconfig.build.json',
+    }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
   },
   build: {
     sourcemap: true,
@@ -36,10 +36,16 @@ export default defineConfig({
         if (format === 'es') return 'index.js'
         if (format === 'cjs') return 'index.cjs'
         return `index.${format}.js`
-      }
+      },
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime']
-    }
-  }
+      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) return 'style.css'
+          return assetInfo.name ?? 'assets/[name][extname]'
+        },
+      },
+    },
+  },
 })

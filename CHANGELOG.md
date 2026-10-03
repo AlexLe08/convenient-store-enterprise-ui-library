@@ -9,9 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Automated accessibility testing via `vitest-axe`, running axe-core against all 8 SearchInput states in CI
-- Type augmentation in `src/types/vitest-axe.d.ts` bridging vitest-axe's broken type declarations to Vitest 2.x
-
 ### Fixed
 
 - `nested-interactive` and `aria-required-children` violations in recent-search rows — remove buttons moved outside the listbox subtree to satisfy the ARIA spec
@@ -29,11 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full ARIA combobox pattern: `role="combobox"`, `aria-activedescendant`, `aria-expanded`, `aria-controls`
 - Keyboard support: arrow keys, Enter, Escape, Tab (commit-on-highlight), Home/End
 - Subcomponents: `SuggestionsList`, `SuggestionItem`, `HighlightedText`, `SectionHeader`, `ClearButton`, `LoadingIndicator`
+- Automated accessibility testing via `vitest-axe`, running axe-core against all 8 SearchInput states in CI
+- Type augmentation in `src/types/vitest-axe.d.ts` bridging vitest-axe's broken type declarations to Vitest 2.x
 - Storybook: 8 component states plus desktop and mobile retail demos
 - Test suite: 89 tests across hooks, utilities, subcomponents, and integration
 - Chromatic visual regression workflow
 - GitHub Actions CI: `check` (lint + typecheck + test) and `chromatic`
 - Bundle size report and package content verification scripts
+- `nested-interactive` and `aria-required-children` violations in recent-search rows — remove buttons moved outside the listbox subtree to satisfy the ARIA spec
+- Listbox role is now only applied when the dropdown contains actionable options, not in loading/error/empty states
 
 ### Design decisions
 
