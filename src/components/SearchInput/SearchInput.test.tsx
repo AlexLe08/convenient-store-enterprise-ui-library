@@ -538,7 +538,7 @@ describe('SearchInput — Tab key behavior', () => {
     await user.click(clearButton)
 
     await waitFor(() => {
-      expect(screen.getByRole('status')).toHaveTextContent('Search cleared.')
+      expect(screen.getByRole('status')).toHaveTextContent('Search input cleared.')
     })
   })
 })
