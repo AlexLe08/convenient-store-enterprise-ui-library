@@ -47,6 +47,7 @@ export function SearchInput({
 }: SearchInputProps) {
   const [inputValue, setInputValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const [announcement, setAnnouncement] = useState('')
 
   // ─── Data sources ────────────────────────────────────────────────────────
   const suggestionsState = useSearchSuggestions({
@@ -235,6 +236,7 @@ export function SearchInput({
     setInputValue('')
     onChange?.('')
     closeMenu()
+    setAnnouncement('Search input cleared.')
     inputRef.current?.focus()
   }, [onChange, closeMenu])
 
@@ -288,7 +290,6 @@ export function SearchInput({
             {renderLeadingIcon ? renderLeadingIcon() : <DefaultSearchIcon />}
           </span>
         )}
-
         <input
           // getInputProps returns props and a ref, destructure here then use mergedInputRef instead
           {...inputProps}
@@ -304,7 +305,15 @@ export function SearchInput({
           autoFocus={autoFocus}
           onKeyDown={handleKeyDown}
         />
-
+        <span
+          // Announcements for screen reader users
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className={styles.visuallyHidden}
+        >
+          {announcement}
+        </span>
         {showClearButton && <ClearButton onClick={handleClear} className={styles.clearButton} />}
       </div>
 

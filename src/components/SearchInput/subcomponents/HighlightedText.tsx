@@ -19,7 +19,7 @@ export function HighlightedText({
   text,
   query,
   as: Component = 'mark',
-  className
+  className,
 }: HighlightedTextProps) {
   const segments = highlightMatch(text, query)
 
@@ -32,7 +32,7 @@ export function HighlightedText({
     <>
       {segments.map((segment, index) =>
         segment.match ? (
-          <Component key={index} className={className}>
+          <Component key={index} className={className} aria-hidden="true">
             {segment.text}
           </Component>
         ) : (
