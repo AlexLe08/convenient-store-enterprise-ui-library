@@ -51,7 +51,7 @@ export const SuggestionItem = forwardRef<HTMLDivElement, SuggestionItemProps>(
         data-highlighted={isHighlighted ? 'true' : undefined}
         className={[styles.suggestionRow, className].filter(Boolean).join(' ')}
       >
-        <div ref={ref} className={styles.suggestionItem} {...rest}>
+        <div ref={ref} role="option" className={styles.suggestionItem} {...rest} aria-label={label}>
           {resolvedIcon && (
             <span className={styles.suggestionIcon} aria-hidden="true">
               {resolvedIcon}
