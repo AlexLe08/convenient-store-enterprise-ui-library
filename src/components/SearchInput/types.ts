@@ -35,6 +35,8 @@ export interface SearchInputProps {
   limit?: number
   /** Whether the recent searches section is shown. Default: true. */
   showRecentSearches?: boolean
+  /** Whether Floating UI's strategy is absolute or fixed. Default: 'absolute'. */
+  floatingStrategy?: 'absolute' | 'fixed'
 
   // ─── Callbacks ───────────────────────────────────────────────────────────
   /** Fires on Enter (or suggestion selection) with the final query and its source. */
