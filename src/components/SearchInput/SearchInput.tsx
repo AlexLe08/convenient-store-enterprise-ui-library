@@ -37,6 +37,7 @@ export function SearchInput({
   renderLeadingIcon,
   className,
   style,
+  floatingStrategy,
   disabled = false,
   autoFocus = false,
   'aria-label': ariaLabel,
@@ -132,6 +133,7 @@ export function SearchInput({
       if (!nextOpen) closeMenu()
     },
     placement: 'bottom-start',
+    strategy: floatingStrategy ?? 'absolute',
     whileElementsMounted: autoUpdate,
     middleware: [
       offset(4),
