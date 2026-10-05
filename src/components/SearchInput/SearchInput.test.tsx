@@ -519,4 +519,26 @@ describe('SearchInput — Tab key behavior', () => {
     const clearButton = screen.getByRole('button', { name: /clear search/i })
     expect(clearButton).toHaveFocus()
   })
+
+  it('announces when the search is cleared', async () => {
+    const user = userEvent.setup()
+    render(
+      <SearchInput
+        suggestions={SUGGESTIONS}
+        debounceMs={0}
+        minQueryLength={1}
+        aria-label="Search products"
+      />
+    )
+
+    const input = screen.getByRole('combobox', { name: 'Search products' })
+    await user.type(input, 'iphone')
+
+    const clearButton = screen.getByRole('button', { name: 'Clear search' })
+    await user.click(clearButton)
+
+    await waitFor(() => {
+      expect(screen.getByRole('status')).toHaveTextContent('Search cleared.')
+    })
+  })
 })
