@@ -1,6 +1,6 @@
 {
   "name": "convenient-store-enterprise-ui-library",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Enterprise UI component library with advanced search capabilities",
   "type": "module",
   "main": "./dist/index.cjs",
