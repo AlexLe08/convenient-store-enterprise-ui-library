@@ -142,7 +142,7 @@ describe('SearchInput — accessibility', () => {
 
     await user.type(screen.getByRole('combobox', { name: 'Search products' }), 'iphone')
     await waitFor(() => {
-      expect(screen.getByRole('status')).toBeInTheDocument()
+      expect(screen.getByText('Loading…')).toBeInTheDocument()
     })
 
     await expectNoA11yViolations(container)

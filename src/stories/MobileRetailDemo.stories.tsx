@@ -51,8 +51,8 @@ function MobileRetailDemo() {
 
         <SearchInput
           suggestions={SUGGESTIONS}
-          placeholder="Search products…"
-          aria-label="Search products"
+          placeholder="What are you looking for?"
+          aria-label="Search"
           minQueryLength={1}
           recentSearchesKey="cs-ui:mobile-demo-recents"
           onSearch={(q) => {

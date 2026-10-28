@@ -35,8 +35,8 @@ function RetailDemo() {
         <div className={styles.searchWrapper}>
           <SearchInput
             suggestions={SUGGESTIONS}
-            placeholder="Search products…"
-            aria-label="Search products"
+            placeholder="What are you looking for?"
+            aria-label="Search"
             minQueryLength={1}
             recentSearchesKey="cs-ui:demo-recents"
             onSearch={(query) => setActiveQuery(query)}
